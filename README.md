@@ -69,4 +69,4 @@ npm install
 npm run dev
 ```
 
-Após executar este comando, o aplicativo estará disponível em `http://localhost:3000` (ou na porta especificada no console).
+Após executar este comando, o aplicativo estará disponível em `http://localhost:5173` (ou na porta especificada no console).
