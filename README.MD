@@ -1,8 +1,8 @@
-# Todo Web App
+# Task Master
 
 ## Sobre o Projeto
 
-Este é um projeto acadêmico desenvolvido como parte do curso de Análise e Desenvolvimento de Sistemas. O Todo Web App é uma aplicação web para gerenciamento de tarefas, demonstrando habilidades em desenvolvimento front-end e back-end.
+Este é um projeto acadêmico desenvolvido como parte do curso de Análise e Desenvolvimento de Sistemas. O Task Master é uma aplicação web para gerenciamento de tarefas, demonstrando habilidades em desenvolvimento front-end e back-end.
 
 ## Como Contribuir
 
