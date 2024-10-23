@@ -55,11 +55,12 @@ git merge upstream/main
 git push origin main
 ```
 
-## Executando o Projeto Localmente
+## Executando frontend Localmente
 
 ### Instalando Dependências
 
 ```
+cd client
 npm install
 ```
 
