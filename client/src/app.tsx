@@ -74,7 +74,7 @@ export function App() {
       <form className="space-y-2" onSubmit={handleSubmit(handleSubmitTask)}>
         <div className="flex w-full items-center gap-3">
           <input
-            className="w-full rounded-lg border-none bg-slate-50 p-4 text-lg text-slate-950 outline-none ring-1 ring-slate-400 placeholder:text-slate-500 focus:ring-2 focus:ring-slate-600"
+            className="w-full rounded-lg border-none bg-zinc-50 p-4 text-lg text-zinc-950 outline-none ring-1 ring-zinc-400 placeholder:text-zinc-500 focus:ring-2 focus:ring-zinc-600"
             placeholder="O que você deseja fazer?"
             {...register('task')}
           />
@@ -91,13 +91,13 @@ export function App() {
         <article>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-slate-950">Tarefas criadas</p>
-              <span className="flex items-center justify-center rounded-full bg-slate-300/50 px-2 py-1 font-bold text-slate-500">
+              <p className="font-semibold text-zinc-950">Tarefas criadas</p>
+              <span className="flex items-center justify-center rounded-full bg-zinc-300/50 px-2 py-1 font-bold text-zinc-500">
                 {tasks.length}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-slate-950">Concluídas</p>
+              <p className="font-semibold text-zinc-950">Concluídas</p>
               <span className="flex items-center justify-center rounded-full bg-lime-500/50 px-2 py-1 font-bold text-lime-800">
                 {completedTasks.length}
               </span>
@@ -119,7 +119,7 @@ export function App() {
             </>
           ) : (
             <div>
-              <p className="text-lg text-slate-500 font-semibold text-center">
+              <p className="text-lg text-zinc-500 font-semibold text-center">
                 Nenhuma tarefa criada
               </p>
             </div>
