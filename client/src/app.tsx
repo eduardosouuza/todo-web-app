@@ -119,7 +119,7 @@ export function App() {
             </>
           ) : (
             <div>
-              <p className="text-lg text-zinc-500 font-semibold text-center">
+              <p className="text-center text-lg font-semibold text-zinc-500">
                 Nenhuma tarefa criada
               </p>
             </div>
