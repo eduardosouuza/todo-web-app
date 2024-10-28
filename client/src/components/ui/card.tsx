@@ -27,7 +27,7 @@ export function Card({ task, onDelete, checked, ...props }: CardProps) {
         <p className={clsx(checked && 'text-slate-500 line-through')}>{task}</p>
       </div>
       <button onClick={onDelete}>
-        <Trash2 className="size-5 text-slate-500" />
+        <Trash2 className="size-5 text-zinc-500 duration-200 hover:text-red-500" />
       </button>
     </div>
   )
