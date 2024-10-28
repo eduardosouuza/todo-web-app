@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { useForm, FieldValues } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from './components/ui/button'
-import { Card } from './components/ui/card'
+import { ButtonInput } from './components/button-input'
+import { Card } from './components/card'
+
 
 interface Task {
   id: number
@@ -78,7 +79,7 @@ export function App() {
             placeholder="O que você deseja fazer?"
             {...register('task')}
           />
-          <Button type="submit" />
+          <ButtonInput type="submit" />
         </div>
         {errors.task && (
           <p className="absolute text-sm font-semibold text-red-500">
