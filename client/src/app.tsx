@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ButtonInput } from './components/button-input'
 import { Card } from './components/card'
 
-
 interface Task {
   id: number
   content: string
