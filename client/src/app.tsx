@@ -91,13 +91,13 @@ export function App() {
         <article>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-zinc-950">Tarefas criadas</p>
+              <p className="font-semibold text-zinc-950 dark:text-zinc-100">Tarefas criadas</p>
               <span className="flex items-center justify-center rounded-full bg-zinc-300/50 px-2 py-1 font-bold text-zinc-500">
                 {tasks.length}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-zinc-950">Concluídas</p>
+              <p className="font-semibold text-zinc-950 dark:text-zinc-100">Concluídas</p>
               <span className="flex items-center justify-center rounded-full bg-lime-500/50 px-2 py-1 font-bold text-lime-800">
                 {completedTasks.length}
               </span>
