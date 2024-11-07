@@ -3,11 +3,16 @@ import { ModeToggle } from "./mode-toggle";
 export function Header() {
   return (
     <header className="flex h-48 items-center justify-center gap-4">
-      <h1 className="text-4xl font-black text-zinc-500">
-        Task <span className="text-zinc-950 dark:text-zinc-100">Master</span>
-      </h1>
+      <div className="flex flex-col items-center w-full p-6">
+        <div className="w-full flex justify-end">
+          <ModeToggle />
+          Login
+        </div>
 
-      <ModeToggle />
+        <h1 className="text-4xl font-black text-zinc-500">
+          Task <span className="text-zinc-950 dark:text-zinc-100">Master</span>
+        </h1>
+      </div>
     </header>
   )
 }
