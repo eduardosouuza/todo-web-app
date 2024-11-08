@@ -13,8 +13,8 @@ export function Card({ task, onDelete, checked, ...props }: CardProps) {
   return (
     <div
       className={clsx(
-        'flex items-center justify-between gap-3 rounded-lg bg-zinc-200 p-4 text-sm text-zinc-950 hover:bg-zinc-200/70',
-        checked && 'bg-transparent ring ring-zinc-500',
+        'flex items-center justify-between gap-3 rounded-lg bg-zinc-200 p-4 text-sm text-zinc-950 hover:bg-zinc-200/70 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-900/70',
+        checked && 'bg-transparent ring ring-zinc-500 dark:ring-zinc-800',
       )}
     >
       <div className="flex items-center gap-3">
