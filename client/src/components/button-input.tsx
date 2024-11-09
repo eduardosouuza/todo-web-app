@@ -1,7 +1,9 @@
 import { PlusCircle } from 'lucide-react'
 import { ButtonHTMLAttributes } from 'react'
 
-export function ButtonInput({ ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
+export function ButtonInput({
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}

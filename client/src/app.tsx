@@ -74,7 +74,7 @@ export function App() {
       <form className="space-y-2" onSubmit={handleSubmit(handleSubmitTask)}>
         <div className="flex w-full items-center gap-3">
           <input
-            className="w-full rounded-lg border-none bg-zinc-50 p-4 text-lg text-zinc-950 outline-none ring-1 ring-zinc-400 placeholder:text-zinc-500 focus:ring-2 focus:ring-zinc-600 dark:ring-zinc-800 dark:bg-zinc-900"
+            className="w-full rounded-lg border-none bg-zinc-50 p-4 text-lg text-zinc-950 outline-none ring-1 ring-zinc-400 placeholder:text-zinc-500 focus:ring-2 focus:ring-zinc-600 dark:bg-zinc-900 dark:ring-zinc-800"
             placeholder="O que você deseja fazer?"
             {...register('task')}
           />
@@ -91,19 +91,27 @@ export function App() {
         <article>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-zinc-950 dark:text-zinc-100">Tarefas criadas</p>
-              <span className="flex items-center justify-center rounded-full bg-zinc-300/50 px-2 py-1 font-bold text-zinc-500 dark:text-zinc-300 dark:bg-zinc-500/50">
+              <p className="font-semibold text-zinc-950 dark:text-zinc-100">
+                Tarefas criadas
+              </p>
+
+              <span className="flex items-center justify-center rounded-full bg-zinc-300/50 px-2 py-1 font-bold text-zinc-500 dark:bg-zinc-500/50 dark:text-zinc-300">
                 {tasks.length}
               </span>
             </div>
+
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-zinc-950 dark:text-zinc-100">Concluídas</p>
-              <span className="flex items-center justify-center rounded-full bg-lime-500/50 px-2 py-1 font-bold text-lime-800 dark:text-lime-500 dark:bg-lime-800/50">
+              <p className="font-semibold text-zinc-950 dark:text-zinc-100">
+                Concluídas
+              </p>
+
+              <span className="flex items-center justify-center rounded-full bg-lime-500/50 px-2 py-1 font-bold text-lime-800 dark:bg-lime-800/50 dark:text-lime-500">
                 {completedTasks.length}
               </span>
             </div>
           </div>
         </article>
+
         <article className="space-y-3">
           {tasks.length ? (
             <>

@@ -1,10 +1,10 @@
-import { ModeToggle } from "./mode-toggle";
+import { ModeToggle } from './mode-toggle'
 
 export function Header() {
   return (
     <header className="flex h-48 items-center justify-center gap-4">
-      <div className="flex flex-col items-center w-full p-6">
-        <div className="w-full flex justify-end">
+      <div className="flex w-full flex-col items-center p-6">
+        <div className="flex w-full justify-end">
           <ModeToggle />
           Login
         </div>
