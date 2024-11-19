@@ -17,5 +17,34 @@ class Todo
         return $this->pdo->lastInsertId();
     }
 
-    // passar crud aqui
+    public function read($id)
+    {
+        $sql = 'SELECT * FROM todos WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
+
+    public function update($id, $title, $description)
+    {
+        $sql = 'UPDATE todos SET title = :title, description = :description WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id, 'title' => $title, 'description' => $description]);
+        return $stmt->rowCount();
+    }
+
+    public function delete($id)
+    {
+        $sql = 'DELETE FROM todos WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->rowCount();
+    }
+
+    public function getAll()
+    {
+        $sql = 'SELECT * FROM todos';
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
 }

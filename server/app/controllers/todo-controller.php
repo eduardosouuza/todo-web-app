@@ -20,5 +20,30 @@ class TodoController
         echo json_encode(['id' => $id]);
     }
 
-    // add crud aqui
+    public function read($id)
+    {
+        $todo = $this->todoModel->read($id);
+        echo json_encode($todo);
+    }
+
+    public function update($id)
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $title = $data['title'];
+        $description = $data['description'];
+        $updated = $this->todoModel->update($id, $title, $description);
+        echo json_encode(['updated' => $updated]);
+    }
+
+    public function delete($id)
+    {
+        $deleted = $this->todoModel->delete($id);
+        echo json_encode(['deleted' => $deleted]);
+    }
+
+    public function getAll()
+    {
+        $todos = $this->todoModel->getAll();
+        echo json_encode($todos);
+    }
 }
