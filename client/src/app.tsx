@@ -1,72 +1,90 @@
-import { useState, useEffect } from 'react'
-import { useForm, FieldValues } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ButtonInput } from './components/button-input'
-import { Card } from './components/card'
+import { useState, useEffect } from 'react';
+import { useForm, FieldValues } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ButtonInput } from './components/button-input';
+import { Card } from './components/card';
+import axios from 'axios';
 
 interface Task {
-  id: number
-  content: string
-  completed: boolean
+  id: number;
+  content: string;
+  completed: boolean;
 }
 
 const taskSchema = z.object({
   task: z.string().min(1, 'Digite uma tarefa'),
-})
+});
 
 export function App() {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [completedTasks, setCompletedTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(taskSchema),
-  })
+  });
 
+  // Buscar tarefas do backend na inicialização
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks')
-    if (savedTasks) {
-      const parsedTasks: Task[] = JSON.parse(savedTasks)
-      setTasks(parsedTasks)
-      setCompletedTasks(parsedTasks.filter((task) => task.completed))
-    }
-  }, [])
+    axios
+      .get('http://localhost:5000/api.php')
+      .then((response) => {
+        setTasks(response.data);
+        setCompletedTasks(response.data.filter((task: Task) => task.completed));
+      })
+      .catch((error) => console.error('Erro ao buscar tarefas:', error));
+  }, []);
 
-  useEffect(() => {
-    if (tasks.length > 0) {
-      localStorage.setItem('tasks', JSON.stringify(tasks))
-    }
-  }, [tasks])
-
+  // Adicionar nova tarefa no backend
   function handleSubmitTask(data: FieldValues) {
-    const newTask: Task = {
-      id: tasks.length + 1,
+    const newTask: Omit<Task, 'id'> = {
       content: data.task,
       completed: false,
-    }
+    };
 
-    setTasks([...tasks, newTask])
+    axios
+      .post('http://localhost:5000/api.php', newTask)
+      .then((response) => {
+        setTasks([...tasks, response.data]); // Adiciona a nova tarefa retornada do backend
+      })
+      .catch((error) => console.error('Erro ao adicionar tarefa:', error));
   }
 
+  // Alternar status de conclusão da tarefa no backend
   function handleCheckTask(id: number) {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === id) {
-        task.completed = !task.completed
-      }
-      return task
-    })
+    const updatedTask = tasks.find((task) => task.id === id);
+    if (!updatedTask) return;
 
-    setTasks(updatedTasks)
-    setCompletedTasks(updatedTasks.filter((task) => task.completed))
+    const updatedStatus = !updatedTask.completed;
+
+    axios
+      .put(`http://localhost:5000/api.php?id=${id}`, { completed: updatedStatus })
+      .then(() => {
+        const updatedTasks = tasks.map((task) => {
+          if (task.id === id) task.completed = updatedStatus;
+          return task;
+        });
+
+        setTasks(updatedTasks);
+        setCompletedTasks(updatedTasks.filter((task) => task.completed));
+      })
+      .catch((error) => console.error('Erro ao atualizar tarefa:', error));
   }
 
+  // Excluir tarefa do backend
   function handleDeleteTask(id: number) {
-    const updatedTasks = tasks.filter((task) => task.id !== id)
-    setTasks(updatedTasks)
-    setCompletedTasks(updatedTasks.filter((task) => task.completed))
+    axios
+      .delete(`http://localhost:5000/api.php?id=${id}`)
+      .then(() => {
+        const updatedTasks = tasks.filter((task) => task.id !== id);
+        setTasks(updatedTasks);
+        setCompletedTasks(updatedTasks.filter((task) => task.completed));
+      })
+      .catch((error) => console.error('Erro ao excluir tarefa:', error));
   }
 
   return (
@@ -82,7 +100,7 @@ export function App() {
         </div>
         {errors.task && (
           <p className="absolute text-sm font-semibold text-red-500">
-            Esse campo é obrigatorio
+            Esse campo é obrigatório
           </p>
         )}
       </form>
@@ -114,26 +132,22 @@ export function App() {
 
         <article className="space-y-3">
           {tasks.length ? (
-            <>
-              {tasks.map((task) => (
-                <Card
-                  key={task.id}
-                  onDelete={() => handleDeleteTask(task.id)}
-                  onChange={() => handleCheckTask(task.id)}
-                  task={task.content}
-                  checked={task.completed}
-                />
-              ))}
-            </>
+            tasks.map((task) => (
+              <Card
+                key={task.id}
+                onDelete={() => handleDeleteTask(task.id)}
+                onChange={() => handleCheckTask(task.id)}
+                task={task.content}
+                checked={task.completed}
+              />
+            ))
           ) : (
-            <div>
-              <p className="text-center text-lg font-semibold text-zinc-500">
-                Nenhuma tarefa criada
-              </p>
-            </div>
+            <p className="text-center text-lg font-semibold text-zinc-500">
+              Nenhuma tarefa criada
+            </p>
           )}
         </article>
       </section>
     </div>
-  )
+  );
 }
