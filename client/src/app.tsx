@@ -30,7 +30,9 @@ export function App() {
 
   useEffect(() => {
     axios
-      .get<Task[]>('http://localhost:5000/api.php')
+      .get<Task[]>('http://localhost:5000/api.php',{
+        timeout: 1000,
+      })
       .then((response) => {
         console.log('Resposta da API:', response.data);
         setTasks(response.data);
@@ -60,7 +62,7 @@ export function App() {
     const updatedStatus = !updatedTask.completed;
 
     axios
-      .put<void>(`http://localhost:5000/api.php?id=${id}`, { completed: updatedStatus })
+      .put<void>(`http://localhost:5000/api.php`, { id, completed: updatedStatus })
       .then(() => {
         const updatedTasks = tasks.map((task) => {
           if (task.id === id) task.completed = updatedStatus;
@@ -75,7 +77,9 @@ export function App() {
 
   function handleDeleteTask(id: number) {
     axios
-      .delete<void>(`http://localhost:5000/api.php?id=${id}`)
+      .delete('http://localhost:5000/api.php', {
+        data: { id },
+      } as any)
       .then(() => {
         const updatedTasks = tasks.filter((task) => task.id !== id);
         setTasks(updatedTasks);
@@ -128,7 +132,7 @@ export function App() {
         </article>
 
         <article className="space-y-3">
-          {tasks.length ? (
+          {Array.isArray(tasks) && tasks.length ? (
             tasks.map((task) => (
               <Card
                 key={task.id}
