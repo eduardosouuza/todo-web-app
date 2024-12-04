@@ -28,18 +28,17 @@ export function App() {
     resolver: zodResolver(taskSchema),
   });
 
-  // Buscar tarefas do backend na inicialização
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api.php')
+      .get<Task[]>('http://localhost:5000/api.php')
       .then((response) => {
+        console.log('Resposta da API:', response.data);
         setTasks(response.data);
-        setCompletedTasks(response.data.filter((task: Task) => task.completed));
+        setCompletedTasks(response.data.filter((task) => task.completed));
       })
       .catch((error) => console.error('Erro ao buscar tarefas:', error));
   }, []);
-
-  // Adicionar nova tarefa no backend
+  
   function handleSubmitTask(data: FieldValues) {
     const newTask: Omit<Task, 'id'> = {
       content: data.task,
@@ -47,14 +46,13 @@ export function App() {
     };
 
     axios
-      .post('http://localhost:5000/api.php', newTask)
-      .then((response) => {
-        setTasks([...tasks, response.data]); // Adiciona a nova tarefa retornada do backend
-      })
-      .catch((error) => console.error('Erro ao adicionar tarefa:', error));
+    .post<Task>('http://localhost:5000/api.php', newTask)
+    .then((response) => {
+      setTasks([...tasks, response.data]);
+    })
+    .catch((error) => console.error('Erro ao adicionar tarefa:', error));
   }
 
-  // Alternar status de conclusão da tarefa no backend
   function handleCheckTask(id: number) {
     const updatedTask = tasks.find((task) => task.id === id);
     if (!updatedTask) return;
@@ -62,7 +60,7 @@ export function App() {
     const updatedStatus = !updatedTask.completed;
 
     axios
-      .put(`http://localhost:5000/api.php?id=${id}`, { completed: updatedStatus })
+      .put<void>(`http://localhost:5000/api.php?id=${id}`, { completed: updatedStatus })
       .then(() => {
         const updatedTasks = tasks.map((task) => {
           if (task.id === id) task.completed = updatedStatus;
@@ -75,10 +73,9 @@ export function App() {
       .catch((error) => console.error('Erro ao atualizar tarefa:', error));
   }
 
-  // Excluir tarefa do backend
   function handleDeleteTask(id: number) {
     axios
-      .delete(`http://localhost:5000/api.php?id=${id}`)
+      .delete<void>(`http://localhost:5000/api.php?id=${id}`)
       .then(() => {
         const updatedTasks = tasks.filter((task) => task.id !== id);
         setTasks(updatedTasks);
