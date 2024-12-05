@@ -1,8 +1,8 @@
 <?php
-require __DIR__ . '/database/conn.php';
+require __DIR__ . '/../database/conn.php';
 
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
 
 $pdo = Database::getConnection();
