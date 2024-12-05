@@ -31,7 +31,7 @@ export function App() {
   useEffect(() => {
     axios
       .get<Task[]>('http://localhost:5000/api.php',{
-        timeout: 1000,
+        timeout: 5000,
       })
       .then((response) => {
         console.log('Resposta da API:', response.data);
