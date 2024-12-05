@@ -16,9 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    $content = $data['content'];
-    $completed = $data['completed'];
-
+    $content = filter_var($data['content'], FILTER_SANITIZE_STRING);
+    $completed = filter_var($data['completed'], FILTER_VALIDATE_BOOLEAN);
+    
+    if ($content === false || $completed === false) {
+        echo json_encode(['error' => 'Dados inválidos']);
+        exit;
+    }
+    
     $stmt = $pdo->prepare("INSERT INTO task (content, completed) VALUES (:content, :completed)");
     $stmt->bindParam(':content', $content);
     $stmt->bindParam(':completed', $completed, PDO::PARAM_BOOL);
@@ -36,9 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    parse_str(file_get_contents('php://input'), $data);
-    $id = $data['id'];
-    $completed = $data['completed'];
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id = filter_var($data['id'], FILTER_VALIDATE_INT);
+    $completed = filter_var($data['completed'], FILTER_VALIDATE_BOOLEAN);
+    
+    if ($id === false || $completed === false) {
+        echo json_encode(['error' => 'Dados inválidos']);
+        exit;
+    }
 
     $stmt = $pdo->prepare("UPDATE task SET completed = :completed WHERE id = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -52,8 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    parse_str(file_get_contents('php://input'), $data);
-    $id = $data['id'];
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id = filter_var($data['id'], FILTER_VALIDATE_INT);
+    
+    if ($id === false) {
+        echo json_encode(['error' => 'ID inválido']);
+        exit;
+    }
 
     $stmt = $pdo->prepare("DELETE FROM task WHERE id = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
