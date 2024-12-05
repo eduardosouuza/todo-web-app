@@ -4,7 +4,7 @@ class Database {
 
     public static function getConnection() {
         if (self::$pdo === null) {
-            $hostname = ''; // ou o IPv4 do Windows se estiver usando WSL2
+            $hostname = 'localhost'; // ou o IPv4 do Windows se estiver usando WSL2
             $database = 'to_do_list';
             $username = 'postgres';
             $password = '1234';
