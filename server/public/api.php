@@ -48,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $data = json_decode(file_get_contents('php://input'), true);
     $id = filter_var($data['id'], FILTER_VALIDATE_INT);
-    $completed = filter_var($data['completed'], FILTER_VALIDATE_BOOLEAN);
+    $completed = filter_var($data['completed'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     
-    if ($id === false || $completed === false) {
+    if ($id === false || $completed === null) {
         echo json_encode(['error' => 'Dados inválidos']);
         exit;
     }
