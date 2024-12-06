@@ -1,72 +1,88 @@
-import { useState, useEffect } from 'react'
-import { useForm, FieldValues } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ButtonInput } from './components/button-input'
-import { Card } from './components/card'
+import { useState, useEffect } from 'react';
+import { useForm, FieldValues } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ButtonInput } from './components/button-input';
+import { Card } from './components/card';
+import axios from 'axios';
 
 interface Task {
-  id: number
-  content: string
-  completed: boolean
+  id: number;
+  description: string;
+  completed: boolean;
 }
 
 const taskSchema = z.object({
   task: z.string().min(1, 'Digite uma tarefa'),
-})
+});
 
 export function App() {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [completedTasks, setCompletedTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(taskSchema),
-  })
+  });
 
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks')
-    if (savedTasks) {
-      const parsedTasks: Task[] = JSON.parse(savedTasks)
-      setTasks(parsedTasks)
-      setCompletedTasks(parsedTasks.filter((task) => task.completed))
-    }
-  }, [])
-
-  useEffect(() => {
-    if (tasks.length > 0) {
-      localStorage.setItem('tasks', JSON.stringify(tasks))
-    }
-  }, [tasks])
-
+    axios
+      .get<Task[]>('http://localhost:5000/api.php',{
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('Resposta da API:', response.data);
+        setTasks(response.data);
+        setCompletedTasks(response.data.filter((task) => task.completed));
+      })
+      .catch((error) => console.error('Erro ao buscar tarefas:', error));
+  }, []);
+  
   function handleSubmitTask(data: FieldValues) {
-    const newTask: Task = {
-      id: tasks.length + 1,
-      content: data.task,
+    const newTask: Omit<Task, 'id'> = {
+      description: data.task,
       completed: false,
-    }
+    };
 
-    setTasks([...tasks, newTask])
+    axios
+    .post<Task>('http://localhost:5000/api.php', newTask)
+    .then((response) => {
+      setTasks([...tasks, response.data]);
+    })
+    .catch((error) => console.error('Erro ao adicionar tarefa:', error));
   }
 
-  function handleCheckTask(id: number) {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === id) {
-        task.completed = !task.completed
-      }
-      return task
-    })
+  function handleCheckTask(id: number, e: React.ChangeEvent<HTMLInputElement>) {
+    const updatedStatus = e.target.checked;
+  
+    axios
+      .put<void>('http://localhost:5000/api.php', { id, completed: updatedStatus })
+      .then(() => {
+        const updatedTasks = tasks.map((task) => {
+          if (task.id === id) task.completed = updatedStatus;
+          return task;
+        });
 
-    setTasks(updatedTasks)
-    setCompletedTasks(updatedTasks.filter((task) => task.completed))
+        setTasks(updatedTasks);
+        setCompletedTasks(updatedTasks.filter((task) => task.completed));
+      })
+      .catch((error) => console.error('Erro ao atualizar tarefa:', error));
   }
 
   function handleDeleteTask(id: number) {
-    const updatedTasks = tasks.filter((task) => task.id !== id)
-    setTasks(updatedTasks)
-    setCompletedTasks(updatedTasks.filter((task) => task.completed))
+    axios
+      .delete('http://localhost:5000/api.php', {
+        data: { id },
+      } as any)
+      .then(() => {
+        const updatedTasks = tasks.filter((task) => task.id !== id);
+        setTasks(updatedTasks);
+        setCompletedTasks(updatedTasks.filter((task) => task.completed));
+      })
+      .catch((error) => console.error('Erro ao excluir tarefa:', error));
   }
 
   return (
@@ -74,7 +90,7 @@ export function App() {
       <form className="space-y-2" onSubmit={handleSubmit(handleSubmitTask)}>
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <input
-            className="w-full rounded-lg border-none bg-zinc-50 p-4 text-lg text-zinc-950 outline-none ring-1 ring-zinc-400 placeholder:text-zinc-500 focus:ring-2 focus:ring-zinc-600 dark:bg-zinc-900 dark:ring-zinc-800"
+            className="w-full rounded-lg border-none bg-zinc-50 p-4 text-lg text-zinc-950 outline-none ring-1 ring-zinc-400 placeholder:text-zinc-500 focus:ring-2 focus:ring-zinc-600 dark:bg-zinc-900 dark:ring-zinc-800 dark:text-zinc-50"
             placeholder="O que você deseja fazer?"
             {...register('task')}
           />
@@ -82,7 +98,7 @@ export function App() {
         </div>
         {errors.task && (
           <p className="absolute text-sm font-semibold text-red-500">
-            Esse campo é obrigatorio
+            Esse campo é obrigatório
           </p>
         )}
       </form>
@@ -114,27 +130,23 @@ export function App() {
         </article>
 
         <article className="space-y-3">
-          {tasks.length ? (
-            <>
-              {tasks.map((task) => (
-                <Card
-                  key={task.id}
-                  onDelete={() => handleDeleteTask(task.id)}
-                  onChange={() => handleCheckTask(task.id)}
-                  task={task.content}
-                  checked={task.completed}
-                />
-              ))}
-            </>
+          {Array.isArray(tasks) && tasks.length ? (
+            tasks.map((task) => (
+              <Card
+                key={task.id}
+                onDelete={() => handleDeleteTask(task.id)}
+                onChange={(e) => handleCheckTask(task.id, e)}
+                task={task.description}
+                checked={task.completed}
+              />
+            ))
           ) : (
-            <div>
-              <p className="text-center text-lg font-semibold text-zinc-500">
-                Nenhuma tarefa criada
-              </p>
-            </div>
+            <p className="text-center text-lg font-semibold text-zinc-500">
+              Nenhuma tarefa criada
+            </p>
           )}
         </article>
       </section>
     </div>
-  )
+  );
 }
