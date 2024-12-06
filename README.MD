@@ -55,19 +55,33 @@ git merge upstream/main
 git push origin main
 ```
 
-## Executando frontend Localmente
+## Executando o projeto
 
-### Instalando Dependências
+### Criando o banco de dados no postgreSQL
+
+- Abra o postgres e crie uma nova `database` chamada `to_do_list`.
+- Crie uma tabela 
+```
+CREATE TABLE task (
+	id SERIAL PRIMARY KEY,
+	description VARCHAR(50) NOT NULL,
+	completed BOOLEAN DEFAULT FALSE
+);
+```
+
+### Instalando Dependências e iniciando o client
 
 ```
 cd client
 npm install
-```
-
-### Iniciando o Servidor de Desenvolvimento
-
-```
 npm run dev
 ```
 
-Após executar este comando, o aplicativo estará disponível em `http://localhost:5173` (ou na porta especificada no console).
+### Iniciando o server
+
+```
+cd server
+php -S localhost:5000 -t public
+```
+
+Após executar estes comandos, o client estará disponível em `http://localhost:5173` (ou na porta especificada no console).

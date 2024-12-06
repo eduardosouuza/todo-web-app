@@ -6,7 +6,6 @@ export function Header() {
       <div className="flex w-full flex-col items-center p-6">
         <div className="flex w-full justify-end">
           <ModeToggle />
-          Login
         </div>
 
         <h1 className="text-4xl font-black text-zinc-500">
