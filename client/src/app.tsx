@@ -55,14 +55,11 @@ export function App() {
     .catch((error) => console.error('Erro ao adicionar tarefa:', error));
   }
 
-  function handleCheckTask(id: number) {
-    const updatedTask = tasks.find((task) => task.id === id);
-    if (!updatedTask) return;
-
-    const updatedStatus = !updatedTask.completed;
-
+  function handleCheckTask(id: number, e: React.ChangeEvent<HTMLInputElement>) {
+    const updatedStatus = e.target.checked;
+  
     axios
-      .put<void>(`http://localhost:5000/api.php`, { id, completed: updatedStatus })
+      .put<void>('http://localhost:5000/api.php', { id, completed: updatedStatus })
       .then(() => {
         const updatedTasks = tasks.map((task) => {
           if (task.id === id) task.completed = updatedStatus;
@@ -137,7 +134,7 @@ export function App() {
               <Card
                 key={task.id}
                 onDelete={() => handleDeleteTask(task.id)}
-                onChange={() => handleCheckTask(task.id)}
+                onChange={(e) => handleCheckTask(task.id, e)}
                 task={task.description}
                 checked={task.completed}
               />

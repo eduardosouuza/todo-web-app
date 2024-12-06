@@ -9,7 +9,7 @@ interface CardProps {
   onDelete: () => void
 }
 
-export function Card({ task, onDelete, checked, ...props }: CardProps) {
+export function Card({ task, onDelete, checked, onChange, ...props }: CardProps) {
   return (
     <div
       className={clsx(
@@ -22,6 +22,7 @@ export function Card({ task, onDelete, checked, ...props }: CardProps) {
           type="checkbox"
           checked={checked}
           className="size-5 cursor-pointer rounded-full border-none text-lime-500 outline-none focus:ring-0"
+          onChange={onChange}
           {...props}
         />
         <p className={clsx(checked && 'text-zinc-500 line-through')}>{task}</p>
