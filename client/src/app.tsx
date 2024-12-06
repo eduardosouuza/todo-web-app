@@ -90,7 +90,7 @@ export function App() {
       <form className="space-y-2" onSubmit={handleSubmit(handleSubmitTask)}>
         <div className="flex w-full items-center gap-3">
           <input
-            className="w-full rounded-lg border-none bg-zinc-50 p-4 text-lg text-zinc-950 outline-none ring-1 ring-zinc-400 placeholder:text-zinc-500 focus:ring-2 focus:ring-zinc-600 dark:bg-zinc-900 dark:ring-zinc-800"
+            className="w-full rounded-lg border-none bg-zinc-50 p-4 text-lg text-zinc-950 outline-none ring-1 ring-zinc-400 placeholder:text-zinc-500 focus:ring-2 focus:ring-zinc-600 dark:bg-zinc-900 dark:ring-zinc-800 dark:text-zinc-50"
             placeholder="O que você deseja fazer?"
             {...register('task')}
           />
