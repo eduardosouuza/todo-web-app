@@ -16,10 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    $description = filter_var($data['description'], FILTER_SANITIZE_STRING);
-    $completed = filter_var($data['completed'], FILTER_VALIDATE_BOOLEAN);
+    if (!isset($data['description']) || !isset($data['completed'])) {
+        echo json_encode(['error' => 'Dados inválidos']);
+        exit;
+    }
     
-    if ($description === false || $completed === false) {
+    $description = filter_var($data['description'], FILTER_SANITIZE_STRING);
+    $completed = filter_var($data['completed'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    
+    if ($description === false || $completed === null) {
         echo json_encode(['error' => 'Dados inválidos']);
         exit;
     }
