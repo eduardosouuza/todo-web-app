@@ -16,22 +16,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    $content = filter_var($data['content'], FILTER_SANITIZE_STRING);
+    $description = filter_var($data['description'], FILTER_SANITIZE_STRING);
     $completed = filter_var($data['completed'], FILTER_VALIDATE_BOOLEAN);
     
-    if ($content === false || $completed === false) {
+    if ($description === false || $completed === false) {
         echo json_encode(['error' => 'Dados inválidos']);
         exit;
     }
     
-    $stmt = $pdo->prepare("INSERT INTO task (content, completed) VALUES (:content, :completed)");
-    $stmt->bindParam(':content', $content);
+    $stmt = $pdo->prepare("INSERT INTO task (description, completed) VALUES (:description, :completed)");
+    $stmt->bindParam(':description', $description);
     $stmt->bindParam(':completed', $completed, PDO::PARAM_BOOL);
 
     if ($stmt->execute()) {
         $newTask = [
             'id' => $pdo->lastInsertId(),
-            'content' => $content,
+            'description' => $description,
             'completed' => $completed,
         ];
         echo json_encode($newTask);
@@ -79,4 +79,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         echo json_encode(['error' => 'Falha ao excluir tarefa']);
     }
 }
-?>
