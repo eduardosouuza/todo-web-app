@@ -8,7 +8,7 @@ import axios from 'axios';
 
 interface Task {
   id: number;
-  content: string;
+  description: string;
   completed: boolean;
 }
 
@@ -43,7 +43,7 @@ export function App() {
   
   function handleSubmitTask(data: FieldValues) {
     const newTask: Omit<Task, 'id'> = {
-      content: data.task,
+      description: data.task,
       completed: false,
     };
 
@@ -138,7 +138,7 @@ export function App() {
                 key={task.id}
                 onDelete={() => handleDeleteTask(task.id)}
                 onChange={() => handleCheckTask(task.id)}
-                task={task.content}
+                task={task.description}
                 checked={task.completed}
               />
             ))
